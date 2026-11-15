@@ -2,7 +2,10 @@
 from dataclasses import dataclass
 import math
 
-PRIORITY = ('external_navi', 'phone', 'vehicle', 'device')
+# C4's native GPS service is the authoritative navigation position.
+# External navigation / phone fixes remain available as fallbacks for route-only
+# setups or temporary loss of the device GPS; vehicle GPS is the final fallback.
+PRIORITY = ('device', 'external_navi', 'phone', 'vehicle')
 
 
 @dataclass(frozen=True)
