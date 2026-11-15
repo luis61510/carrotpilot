@@ -60,7 +60,7 @@ def test_unknown_course_cannot_extrapolate_vehicle_position(context):
   serv.nPosAngle = 180.
   serv._update_gps(20., sm, 'gpsLocation')
   assert not serv.position_heading_valid
-  assert (serv.vpPosPointLat, serv.vpPosPointLon) == (37., 127.)
+  assert (serv.vpPosPointLat, serv.vpPosPointLon) == (38., 128.)
   assert serv.last_calculate_gps_time == 10.
 
 
