@@ -53,6 +53,8 @@ def test_live_priority_and_source_handover_preserve_original_fix_time(context):
 
 def test_unknown_course_cannot_extrapolate_vehicle_position(context):
   serv, sm, clock = context
+  # Exercise the vehicle-GPS fallback by making C4's native GPS unavailable.
+  sm.valid['gpsLocation'] = False
   sm['carState'].vehicleGps.headingValid = False
   clock[0] = 11.
   serv.nPosAngle = 180.
