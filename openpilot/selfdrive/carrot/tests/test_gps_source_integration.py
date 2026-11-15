@@ -30,20 +30,23 @@ def test_live_priority_and_source_handover_preserve_original_fix_time(context):
   serv._gps_sources().put('external_navi', 36., 126., 45., 0., 10.)
   # A phone packet arriving while external navigation is active stays available.
   serv.update({'latitude': 35., 'longitude': 125., 'heading': 20., 'accuracy': 5., 'gps_speed': 0.})
+  # C4 native GPS must win over external navigation, phone, and vehicle GPS.
+  serv._update_gps(0., sm, 'gpsLocation')
+  assert (serv.position_source, serv.vpPosPointLat) == ('device', 38.)
+
+  # If C4 GPS becomes unavailable, keep the existing fallback order.
+  sm.valid['gpsLocation'] = False
+  clock[0] = 10.5
   serv._update_gps(0., sm, 'gpsLocation')
   assert (serv.position_source, serv.vpPosPointLat) == ('external_navi', 36.)
   serv._gps_sources().remove('external_navi')
-  clock[0] = 10.5
   serv._update_gps(0., sm, 'gpsLocation')
   assert (serv.position_source, serv.vpPosPointLat, serv.last_calculate_gps_time) == ('phone', 35., 10.)
   serv.update({'latitude': 35., 'longitude': 125., 'heading': 20., 'accuracy': 100.})
   serv._update_gps(0., sm, 'gpsLocation')
   assert (serv.position_source, serv.vpPosPointLat) == ('vehicle', 37.)
+
   sm['carState'].vehicleGps.valid = False
-  serv._update_gps(0., sm, 'gpsLocation')
-  assert (serv.position_source, serv.vpPosPointLat) == ('device', 38.)
-  sm.updated['gpsLocation'] = False
-  clock[0] = 13.
   serv._update_gps(0., sm, 'gpsLocation')
   assert serv.position_source == 'none' and serv.vpPosPointLat == 0.
 
