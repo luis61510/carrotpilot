@@ -6,7 +6,7 @@ from openpilot.selfdrive.carrot.gps_sources import GPSSources, PRIORITY
 
 
 def test_priority_and_handover_never_renew_receipt():
-  assert PRIORITY == ('device', 'external_navi', 'phone', 'vehicle')
+  assert PRIORITY == ('device', 'vehicle', 'external_navi', 'phone')
   gps = GPSSources()
   for i, name in enumerate(PRIORITY):
     gps.put(name, 37 + i / 10, 127, 90, 10, 10 + i / 10)
